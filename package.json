@@ -10,8 +10,13 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-navigation/material-top-tabs": "^6.0.2",
+    "@react-navigation/native": "^6.0.2",
     "react": "17.0.2",
-    "react-native": "0.65.1"
+    "react-native": "0.65.1",
+    "react-native-elements": "^3.4.2",
+    "react-native-pager-view": "^5.4.0",
+    "react-native-tab-view": "^3.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
