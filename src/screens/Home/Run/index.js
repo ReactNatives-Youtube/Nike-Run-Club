@@ -3,8 +3,15 @@
  */
 
 import React, {useState} from 'react';
-import {View, Text, Pressable, TextInput} from 'react-native';
-import MapView from 'react-native-maps';
+import {
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
+import MapView, {Circle} from 'react-native-maps';
 import {Avatar} from 'react-native-elements';
 import {validateInput} from '../../../../constants/Validation';
 import styles from './styles';
@@ -44,9 +51,11 @@ const RunScreen = () => {
   };
 
   return (
-    <View style={{height: '100%', width: '100%'}}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
       {/* Google Maps API/Image */}
-      <View style={{height: '100%', width: '100%'}} pointerEvents="none">
+      <View style={styles.container} pointerEvents="none">
         <MapView
           initialRegion={{
             latitude: 37.78825,
@@ -55,13 +64,14 @@ const RunScreen = () => {
             longitudeDelta: 0.0421,
           }}
           minZoomLevel={18}
-          style={{flex: 1, opacity: 0.5}}
-        />
+          style={{flex: 1, opacity: 0.6}}>
+          <Circle
+            center={{latitude: 37.78825, longitude: -122.4324}}
+            radius={4}
+            fillColor="red"
+          />
+        </MapView>
       </View>
-
-      {/* <Text style={{position: 'absolute', bottom: 0, right: 0, fontSize: 53}}>
-        Hello
-      </Text> */}
       <View
         style={{
           position: 'absolute',
@@ -96,7 +106,7 @@ const RunScreen = () => {
           </Pressable>
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
