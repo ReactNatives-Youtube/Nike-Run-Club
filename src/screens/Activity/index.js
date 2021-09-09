@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, FlatList} from 'react-native';
-import ActivityCard from '../../../components/ActivityCard';
-import {DATA} from '../../../../constants/dummyData';
+import ActivityCard from '../../components/ActivityCard';
+import {DATA} from '../../../constants/dummyData';
 const ActivityScreen = () => {
   const renderItem = ({item}) => (
     <ActivityCard
@@ -15,9 +15,6 @@ const ActivityScreen = () => {
 
   return (
     <View style={{paddingHorizontal: 12}}>
-      {/* Card 1 */}
-      {/* <ActivityCard /> */}
-
       <FlatList
         data={DATA}
         renderItem={renderItem}

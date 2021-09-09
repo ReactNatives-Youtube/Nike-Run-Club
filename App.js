@@ -1,9 +1,9 @@
 import React from 'react';
 import type {Node} from 'react';
-import HomeScreen from './src/screens/Home';
+import MainNavigation from './src/navigations/MainNavigation';
 
 const App: () => Node = () => {
-  return <HomeScreen />;
+  return <MainNavigation />;
 };
 
 export default App;

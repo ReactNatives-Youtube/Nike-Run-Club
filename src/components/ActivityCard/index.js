@@ -5,12 +5,14 @@
 import React from 'react';
 import {View, Text, Image, Pressable} from 'react-native';
 import styles from './styles';
+import {useNavigation} from '@react-navigation/native';
 
 const ActivityCard = props => {
+  const navigation = useNavigation();
   return (
     <Pressable
       style={styles.mainContainer}
-      onPress={() => console.log('Details of this page')}>
+      onPress={() => navigation.navigate('Summary')}>
       {/* Inner Container 1 */}
       <View style={styles.innerContainer1}>
         {/* Image */}

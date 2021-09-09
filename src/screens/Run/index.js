@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import MapView, {Circle} from 'react-native-maps';
 import {Avatar} from 'react-native-elements';
-import {validateInput} from '../../../../constants/Validation';
+import {validateInput} from '../../../constants/Validation';
 import styles from './styles';
 const RunScreen = () => {
   // States:
