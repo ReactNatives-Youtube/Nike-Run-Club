@@ -8,4 +8,13 @@ export default colors = {
   toggleButtonBorder: '#ccc',
   toggleButtonBackground: '#fff',
   avatarTitle: '#000',
+
+  // Navigation
+  summaryHeader: '#f7f7f7',
+
+  // Activity Screen
+  cardBackground: '#ffffff',
+  cardHeading: '#070707',
+  cardSubHeading: '#777777',
+  cardMetric: '#8d8d8d',
 };

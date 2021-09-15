@@ -2,10 +2,13 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import {Pressable} from 'react-native';
+
 import SummaryScreen from '../screens/Summary';
 import HomeTabs from './HomeTabs';
 import RunStack from './RunStack';
-
+import colors from '../../constants/colors';
 const MainNavigation = () => {
   const Stack = createStackNavigator();
   return (
@@ -21,7 +24,18 @@ const MainNavigation = () => {
           component={RunStack}
           options={{headerShown: false}}
         />
-        <Stack.Screen name="Summary" component={SummaryScreen} />
+        <Stack.Screen
+          name="Summary"
+          component={SummaryScreen}
+          options={{
+            headerStyle: {backgroundColor: colors.summaryHeader},
+            headerRight: () => (
+              <Pressable onPress={() => alert('Share this run')}>
+                <Fontisto name="share" size={20} style={{marginRight: 12}} />
+              </Pressable>
+            ),
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

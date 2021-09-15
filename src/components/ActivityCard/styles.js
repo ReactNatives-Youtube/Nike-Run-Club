@@ -1,9 +1,10 @@
 import {StyleSheet} from 'react-native';
+import colors from '../../../constants/colors';
 
 export default styles = StyleSheet.create({
   mainContainer: {
     borderRadius: 12,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.cardBackground,
     marginVertical: 8,
     padding: 16,
     elevation: 1,
@@ -15,13 +16,13 @@ export default styles = StyleSheet.create({
   },
   image: {width: 40, height: 40, borderRadius: 8},
   headingContainer: {marginLeft: 12},
-  heading: {color: '#070707'},
-  subheading: {color: '#777777'},
+  heading: {color: colors.cardHeading},
+  subheading: {color: colors.cardSubHeading},
   innerContainer2: {
     marginTop: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   metricValue: {fontWeight: 'bold'},
-  metric: {color: '#8d8d8d'},
+  metric: {color: colors.cardMetric},
 });

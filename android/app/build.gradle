@@ -217,3 +217,5 @@ apply from: file('../../node_modules/@react-native-community/cli-platform-androi
 
 // Adding manual configurations for dot-env
 apply from: project(':react-native-config').projectDir.getPath() + '/dotenv.gradle'
+// Adding manual configuration for react native vector icons
+apply from: '../../node_modules/react-native-vector-icons/fonts.gradle'
