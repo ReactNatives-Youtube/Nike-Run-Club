@@ -17,4 +17,10 @@ export default colors = {
   cardHeading: '#070707',
   cardSubHeading: '#777777',
   cardMetric: '#8d8d8d',
+
+  // Summary Screen
+  summaryBackgroundColor: '#fff',
+  summaryBorder: '#ccc',
+  summarySubheading: '#aaaaaa',
+  summaryMetric: '#999999',
 };
