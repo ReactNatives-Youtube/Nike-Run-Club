@@ -30,5 +30,25 @@ export default styles = StyleSheet.create({
   metricValue: {fontSize: 24, fontWeight: 'bold'},
   metric: {color: colors.summaryMetric, fontSize: 16},
   ImageLogoContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-  image: {height: 100, width: 80},
+  image: {height: 100, width: 80, marginBottom: 12},
+  nextLevelImage: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 20,
+    height: 25,
+    top: 175,
+    left: 300,
+  },
+  progressBarContainer: {
+    borderRadius: 4,
+    borderColor: '#fff',
+    backgroundColor: '#ccc',
+    width: '80%',
+    borderWidth: 2,
+  },
+  progressBar: {
+    borderRadius: 4,
+    borderWidth: 2,
+  },
 });

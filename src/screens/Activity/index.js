@@ -10,6 +10,8 @@ const ActivityScreen = () => {
       kilometer={item.kilometer}
       avgPace={item.avgPace}
       time={item.time}
+      cal={item.calories}
+      totalKm={item.totalKmRan}
     />
   );
 

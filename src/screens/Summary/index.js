@@ -1,25 +1,59 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {Platform} from 'react-native';
 import {Image} from 'react-native';
 import {KeyboardAvoidingView} from 'react-native';
 import {View, Text, Pressable, TextInput, Keyboard} from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import styles from './styles';
-const SummaryScreen = () => {
-  const [title, setTitle] = useState('Tuesday Morning Run');
+import {Levels} from '../../../constants/dummyData';
+const SummaryScreen = ({route, navigation}) => {
+  // Props from each run
+  const props = route.params;
+  console.log(props);
+  const [title, setTitle] = useState('');
   const [imageBackground, setImageBackground] = useState('green');
+  const [nextLevelImageBackground, setNextLevelImageBackground] =
+    useState('orange');
+  const [progress, setProgress] = useState('20%');
+  const [kilometerLeft, setKilometerLeft] = useState(0);
   // Function to change title input
   const titleChangeHandler = input => {
     setTitle(input);
   };
 
+  // Function to calculate the Level of that user
+  const calculateLevelHandler = totalKm => {
+    for (let i = 0; i < Levels.length; i++) {
+      if (Levels[i].kilometerRequired > totalKm) {
+        setImageBackground(Levels[i - 1].level);
+        setNextLevelImageBackground(Levels[i].level);
+        let percentageDone = totalKm / Levels[i].kilometerRequired;
+        setProgress(percentageDone * 100 + '%');
+        setKilometerLeft(Levels[i].kilometerRequired - totalKm);
+        return;
+      }
+      setImageBackground(Levels[i].level);
+      setNextLevelImageBackground(Levels[i].level);
+      let percentageDone = totalKm / Levels[i].kilometerRequired;
+      setProgress(percentageDone * 100 + '%');
+      setKilometerLeft(Levels[i].kilometerRequired - totalKm);
+    }
+  };
   // Reference to TextInput component
   const textInputRef = useRef();
+
+  // This hook works only once
+  useEffect(() => {
+    const startTite = props.day + ' ' + props.timeOfDay + ' Run';
+    setTitle(startTite);
+    calculateLevelHandler(props.totalKm);
+  }, []);
+
   return (
     // Main Container
     <Pressable style={styles.mainContainer} onPress={() => Keyboard.dismiss()}>
       {/* Day-Time */}
-      <Text style={styles.subheading}>Tuesday - 07:28</Text>
+      <Text style={styles.subheading}>{props.day} - 07:28</Text>
       {/* TextInput- heading with pencil icon */}
       <Pressable
         style={styles.textInputContainer}
@@ -39,21 +73,21 @@ const SummaryScreen = () => {
         <View style={{flex: 1}}>
           {/* Kilometers */}
           <View style={{marginTop: 12}}>
-            <Text style={styles.kilometerValue}>2.22</Text>
+            <Text style={styles.kilometerValue}>{props.kilometer}</Text>
             <Text style={styles.kilometerMetric}>Kilometers</Text>
           </View>
           {/* Metric pace, time and calories */}
           <View style={styles.metricContainer}>
             <View>
-              <Text style={styles.metricValue}>10'59"</Text>
+              <Text style={styles.metricValue}>{props.avgPace}</Text>
               <Text style={styles.metric}>Pace</Text>
             </View>
             <View>
-              <Text style={styles.metricValue}>24:30</Text>
+              <Text style={styles.metricValue}>{props.time}</Text>
               <Text style={styles.metric}>Time</Text>
             </View>
             <View>
-              <Text style={styles.metricValue}>116</Text>
+              <Text style={styles.metricValue}>{props.cal}</Text>
               <Text style={styles.metric}>Calories</Text>
             </View>
           </View>
@@ -63,7 +97,24 @@ const SummaryScreen = () => {
               source={require('../../../assets/NRCLogo.png')}
               style={{...styles.image, backgroundColor: imageBackground}}
             />
-            <Text>Progress bar</Text>
+            <Image
+              source={require('../../../assets/NRCLogo.png')}
+              style={{
+                ...styles.nextLevelImage,
+                backgroundColor: nextLevelImageBackground,
+              }}
+            />
+            <View style={styles.progressBarContainer}>
+              <View
+                style={{
+                  ...styles.progressBar,
+                  width: progress,
+                  borderColor: imageBackground,
+                }}></View>
+            </View>
+            <Text style={{marginTop: 12}}>
+              {kilometerLeft} Km to Orange Level
+            </Text>
           </View>
         </View>
       </KeyboardAvoidingView>

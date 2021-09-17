@@ -12,7 +12,17 @@ const ActivityCard = props => {
   return (
     <Pressable
       style={styles.mainContainer}
-      onPress={() => navigation.navigate('Summary')}>
+      onPress={() =>
+        navigation.navigate('Summary', {
+          day: props.day,
+          timeOfDay: props.timeOfDay,
+          kilometer: props.kilometer,
+          avgPace: props.avgPace,
+          time: props.time,
+          cal: props.cal,
+          totalKm: props.totalKm,
+        })
+      }>
       {/* Inner Container 1 */}
       <View style={styles.innerContainer1}>
         {/* Image */}
