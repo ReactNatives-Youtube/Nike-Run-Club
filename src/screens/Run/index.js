@@ -13,9 +13,13 @@ import {
 } from 'react-native';
 import MapView, {Circle} from 'react-native-maps';
 import {Avatar} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
 import {validateInput} from '../../../constants/Validation';
 import styles from './styles';
 const RunScreen = () => {
+  // Initialize navigation hook
+  const navigation = useNavigation();
+
   // States:
   // 1. For metric value
   const [metricValue, setMetricValue] = useState('1.0');
@@ -95,7 +99,7 @@ const RunScreen = () => {
             size={120}
             rounded
             title="START"
-            onPress={() => console.warn('Works!')}
+            onPress={() => navigation.navigate('RunStack', {screen: 'Running'})}
             activeOpacity={0.7}
             titleStyle={styles.avatarTitle}
             containerStyle={styles.avatarContainer}

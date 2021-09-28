@@ -6,6 +6,8 @@ import {View, Text, Pressable, TextInput, Keyboard} from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import styles from './styles';
 import {Levels} from '../../../constants/dummyData';
+import ProgressBar from '../../components/ProgressBar';
+import colors from '../../../constants/colors';
 const SummaryScreen = ({route, navigation}) => {
   // Props from each run
   const props = route.params;
@@ -104,14 +106,12 @@ const SummaryScreen = ({route, navigation}) => {
                 backgroundColor: nextLevelImageBackground,
               }}
             />
-            <View style={styles.progressBarContainer}>
-              <View
-                style={{
-                  ...styles.progressBar,
-                  width: progress,
-                  borderColor: imageBackground,
-                }}></View>
-            </View>
+            <ProgressBar
+              prog={progress}
+              innerBorderColor={imageBackground}
+              containerBorderColor={colors.summaryProgressBarBorder}
+              containerBgr={colors.summaryProgressBarContainerBackground}
+            />
             <Text style={{marginTop: 12}}>
               {kilometerLeft} Km to Orange Level
             </Text>

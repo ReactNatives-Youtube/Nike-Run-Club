@@ -9,7 +9,11 @@ const RunStack = () => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator initialRouteName="Running">
-      <Stack.Screen name="Running" component={RunningScreen} />
+      <Stack.Screen
+        name="Running"
+        component={RunningScreen}
+        options={{headerShown: false}}
+      />
       <Stack.Screen name="Pause" component={PauseScreen} />
     </Stack.Navigator>
   );

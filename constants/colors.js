@@ -23,4 +23,6 @@ export default colors = {
   summaryBorder: '#ccc',
   summarySubheading: '#aaaaaa',
   summaryMetric: '#999999',
+  summaryProgressBarBorder: '#ccc',
+  summaryProgressBarContainerBackground: '#fff',
 };
