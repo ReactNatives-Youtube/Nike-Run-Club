@@ -99,7 +99,12 @@ const RunScreen = () => {
             size={120}
             rounded
             title="START"
-            onPress={() => navigation.navigate('RunStack', {screen: 'Running'})}
+            onPress={() =>
+              navigation.navigate('RunStack', {
+                screen: 'Running',
+                params: {value: metricValue, metric: Toggle},
+              })
+            }
             activeOpacity={0.7}
             titleStyle={styles.avatarTitle}
             containerStyle={styles.avatarContainer}

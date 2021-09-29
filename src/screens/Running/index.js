@@ -1,16 +1,46 @@
 /**
  * This screen is shown when you start a run
+ *
+ *
+ * Sending props from home run page to running page
  */
 
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, Text, Alert} from 'react-native';
 import ProgressBar from '../../components/ProgressBar';
 import {Avatar} from 'react-native-elements';
 import styles from './styles';
 import {useNavigation} from '@react-navigation/native';
 
-const RunningScreen = () => {
+const RunningScreen = ({route}) => {
   const navigation = useNavigation();
+  const props = route.params;
+  console.log(props);
+
+  // This useEffect is triggered only for backbutton functionality
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', event => {
+        // Prevent the default behavior
+        event.preventDefault();
+
+        // Ask the user using alert
+        Alert.alert(
+          'Discard Run',
+          'Are you sure you want to discard this run',
+          [
+            {text: 'No', style: 'cancel', onPress: () => {}},
+            {
+              text: 'Yes',
+              style: 'destructive',
+              onPress: () => navigation.dispatch(event.data.action),
+            },
+          ],
+        );
+      }),
+    [navigation],
+  );
+
   return (
     <View style={styles.mainContainer}>
       <View style={styles.paceCalContainer}>
@@ -21,7 +51,7 @@ const RunningScreen = () => {
         </View>
         {/* Calories */}
         <View style={styles.metricContainer}>
-          <Text style={styles.metricValue}>--"</Text>
+          <Text style={styles.metricValue}>--</Text>
           <Text style={styles.metric}>Calories</Text>
         </View>
       </View>
