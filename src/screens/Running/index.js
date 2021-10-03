@@ -1,11 +1,11 @@
 /**
  * This screen is shown when you start a run
  *
- *
+ * Customizing back button
  * Sending props from home run page to running page
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Alert} from 'react-native';
 import ProgressBar from '../../components/ProgressBar';
 import {Avatar} from 'react-native-elements';
@@ -15,55 +15,65 @@ import {useNavigation} from '@react-navigation/native';
 const RunningScreen = ({route}) => {
   const navigation = useNavigation();
   const props = route.params;
-  console.log(props);
 
-  // This useEffect is triggered only for backbutton functionality
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', event => {
-        // Prevent the default behavior
-        event.preventDefault();
+  // States to maintain dynamic values
+  const [metric, setMetric] = useState('Kilometers')
+  const [metricValue, setMetricValue] = useState('0.0')
+  // Progress %
+  const [progress, setProgress] = useState('0%')
+  const [pace, setPace] = useState("-'--\"")
+  const [calories, setCalories] = useState("--")
+  // Target value set by the user
+  const [targetValue, setTargetValue] = useState('0')
 
-        // Ask the user using alert
-        Alert.alert(
-          'Discard Run',
-          'Are you sure you want to discard this run',
-          [
-            {text: 'No', style: 'cancel', onPress: () => {}},
-            {
-              text: 'Yes',
-              style: 'destructive',
-              onPress: () => navigation.dispatch(event.data.action),
-            },
-          ],
-        );
-      }),
-    [navigation],
-  );
+  // This useeffect only once
+  useEffect(() => {
+    if(props.metric == 'Time'){
+      setMetric('Hours:Minutes')
+      setMetricValue('00:00')
+    }
+    setTargetValue(props.value)
+  }, [])
+
+
+
+  // UseEffect runs only when the navigation back button is pressed
+  useEffect(()=>navigation.addListener('beforeRemove',event=>{
+    // prevent default behavior
+    event.preventDefault();
+
+    // Alert to confirm his action
+
+    Alert.alert('Discarding Run','Are you sure you want to discard this run?',[
+      {text:"No",style:"cancel",onPress:()=>{}},
+      {text:"Yes",style:"destructive",onPress:()=>navigation.dispatch(event.data.action)}
+    ])
+
+  }),[navigation])
 
   return (
     <View style={styles.mainContainer}>
       <View style={styles.paceCalContainer}>
         {/* Pace */}
         <View style={styles.metricContainer}>
-          <Text style={styles.metricValue}>-'--"</Text>
+          <Text style={styles.metricValue}>{pace}</Text>
           <Text style={styles.metric}>Pace</Text>
         </View>
         {/* Calories */}
         <View style={styles.metricContainer}>
-          <Text style={styles.metricValue}>--</Text>
+          <Text style={styles.metricValue}>{calories}</Text>
           <Text style={styles.metric}>Calories</Text>
         </View>
       </View>
 
       {/* Distance/Time metric set up */}
       <View style={styles.innerContainers}>
-        <Text style={styles.mainMetric}>0.00</Text>
-        <Text style={styles.metric}>Kilometers</Text>
+        <Text style={styles.mainMetric}>{metricValue}</Text>
+        <Text style={styles.metric}>{metric}</Text>
       </View>
       {/* Progress bar */}
       <View style={styles.innerContainers}>
-        <ProgressBar prog={'60%'} containerBgr={'#ccc'} />
+        <ProgressBar prog={progress} containerBgr={'#ccc'} />
       </View>
       {/* Pause Button */}
       <View style={styles.innerContainers}>
