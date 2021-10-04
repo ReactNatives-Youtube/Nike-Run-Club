@@ -109,7 +109,7 @@ const SummaryScreen = ({route, navigation}) => {
             <ProgressBar
               prog={progress}
               innerBorderColor={imageBackground}
-              containerBorderColor={colors.summaryProgressBarBorder}
+              containerBorderColor={imageBackground}
               containerBgr={colors.summaryProgressBarContainerBackground}
             />
             <Text style={{marginTop: 12}}>

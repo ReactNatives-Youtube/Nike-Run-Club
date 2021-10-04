@@ -8,6 +8,7 @@ const ProgressBar = ({
   innerBorderColor,
   containerBorderColor,
   containerBgr,
+  propStyles,
 }) => {
   return (
     <View
@@ -15,6 +16,7 @@ const ProgressBar = ({
         ...styles.progressBarContainer,
         borderColor: containerBorderColor,
         backgroundColor: containerBgr,
+        ...propStyles,
       }}>
       <View
         style={{
