@@ -13,7 +13,7 @@ export default styles = StyleSheet.create({
     alignItems: 'center',
   },
   metricContainer: {justifyContent: 'center', alignItems: 'center'},
-  metricValue: {fontSize: 32},
+  metricValue: {fontSize: 32, fontWeight: 'bold'},
   metric: {fontSize: 20, fontWeight: 'bold', color: '#a96528'},
   mainMetric: {fontSize: 120, fontStyle: 'italic', fontWeight: 'bold'},
   avatarTitle: {fontSize: 28, fontWeight: 'bold'},

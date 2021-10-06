@@ -3,7 +3,7 @@
  *
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, Alert} from 'react-native';
 import ProgressBar from '../../components/ProgressBar';
 import {Avatar} from 'react-native-elements';
@@ -15,6 +15,8 @@ const RunningScreen = ({route}) => {
   const props = route.params;
 
   // States to maintain dynamic values
+  const [timeValue, setTimeValue] = useState('00:00');
+  const [kilometersValue, setKilometersValue] = useState('0.0');
   const [metric, setMetric] = useState('Kilometers');
   const [metricValue, setMetricValue] = useState('0.0');
   // Progress %
@@ -33,30 +35,38 @@ const RunningScreen = ({route}) => {
     setTargetValue(props.value);
   }, []);
 
-  // UseEffect runs only when the navigation back button is pressed
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', event => {
-        // prevent default behavior
-        event.preventDefault();
+  // Alert when returning to previous page
+  const callbackFunction = useCallback(
+    event => {
+      // prevent default behavior
+      event.preventDefault();
 
-        // Alert to confirm his action
+      // Alert to confirm his action
 
-        Alert.alert(
-          'Discarding Run',
-          'Are you sure you want to discard this run?',
-          [
-            {text: 'No', style: 'cancel', onPress: () => {}},
-            {
-              text: 'Yes',
-              style: 'destructive',
-              onPress: () => navigation.dispatch(event.data.action),
-            },
-          ],
-        );
-      }),
+      Alert.alert(
+        'Discarding Run',
+        'Are you sure you want to discard this run?',
+        [
+          {text: 'No', style: 'cancel', onPress: () => {}},
+          {
+            text: 'Yes',
+            style: 'destructive',
+            onPress: () => navigation.dispatch(event.data.action),
+          },
+        ],
+      );
+    },
     [navigation],
   );
+
+  // UseEffect runs only when the navigation back button is pressed
+  useEffect(() => {
+    navigation.addListener('beforeRemove', callbackFunction);
+    return () => {
+      console.log('asdas');
+      navigation.removeListener('beforeRemove', callbackFunction);
+    };
+  }, [navigation]);
 
   return (
     <View style={styles.mainContainer}>
@@ -88,7 +98,15 @@ const RunningScreen = ({route}) => {
           size={100}
           rounded
           icon={{name: 'pause'}}
-          onPress={() => navigation.navigate('Pause')}
+          onPress={() =>
+            navigation.navigate('Pause', {
+              time: timeValue,
+              kilometers: kilometersValue,
+              calories: calories,
+              pace: pace,
+              progressPercentage: progress,
+            })
+          }
           activeOpacity={0.7}
           titleStyle={styles.avatarTitle}
           containerStyle={{backgroundColor: '#000'}}

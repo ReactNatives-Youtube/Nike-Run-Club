@@ -1,14 +1,22 @@
+/**
+ * Moving to summary page
+ */
+
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, ToastAndroid} from 'react-native';
 import MapView, {Circle} from 'react-native-maps';
 import ProgressBar from '../../components/ProgressBar';
 import {Avatar} from 'react-native-elements';
-const PauseScreen = () => {
+import {useNavigation} from '@react-navigation/native';
+import styles from './styles';
+const PauseScreen = ({route}) => {
+  const navigation = useNavigation();
+  const {time, kilometers, calories, pace, progressPercentage} = route.params;
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <View style={styles.mainContainer}>
       {/* Map View */}
       {/* Google Maps API/Image */}
-      <View style={{height: '30%', width: '100%'}} pointerEvents="none">
+      <View style={styles.mapContainer} pointerEvents="none">
         <MapView
           initialRegion={{
             latitude: 37.78825,
@@ -27,74 +35,67 @@ const PauseScreen = () => {
       </View>
       {/* Metrics */}
 
-      <View
-        style={{
-          padding: 40,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
+      <View style={styles.metricMainContainer}>
         {/* Kilometer and time */}
-        <View
-          style={{
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View style={{alignItems: 'center'}}>
-            <Text style={{fontSize: 32, fontWeight: 'bold'}}>0.0</Text>
-            <Text style={{color: '#999999'}}>Kilometers</Text>
+        <View style={styles.metricInnerContainer}>
+          <View style={styles.metricContainer}>
+            <Text style={styles.metricValue}>{kilometers}</Text>
+            <Text style={styles.metric}>Kilometers</Text>
           </View>
-          <View style={{alignItems: 'center', marginTop: 16}}>
-            <Text style={{fontSize: 32, fontWeight: 'bold'}}>0</Text>
-            <Text style={{color: '#999999'}}>Calories</Text>
+          <View style={styles.secondMetricContainer}>
+            <Text style={styles.metricValue}>{calories}</Text>
+            <Text style={styles.metric}>Calories</Text>
           </View>
         </View>
         {/* Calories and pace */}
-        <View
-          style={{
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View style={{alignItems: 'center'}}>
-            <Text style={{fontSize: 32, fontWeight: 'bold'}}>00:00</Text>
-            <Text style={{color: '#999999'}}>Time</Text>
+        <View style={styles.metricInnerContainer}>
+          <View style={styles.metricContainer}>
+            <Text style={styles.metricValue}>{time}</Text>
+            <Text style={styles.metric}>Time</Text>
           </View>
-          <View style={{alignItems: 'center', marginTop: 16}}>
-            <Text style={{fontSize: 32, fontWeight: 'bold'}}>0</Text>
-            <Text style={{color: '#999999'}}>Pace</Text>
+          <View style={styles.secondMetricContainer}>
+            <Text style={styles.metricValue}>{pace}</Text>
+            <Text style={styles.metric}>Pace</Text>
           </View>
         </View>
       </View>
-      <View style={{padding: 40, alignItems: 'center'}}>
+      <View style={styles.progressBarContainer}>
         {/* Progress bar */}
         <ProgressBar
-          prog={'20%'}
+          prog={progressPercentage}
           containerBgr={'#ccc'}
           propStyles={{width: '90%'}}
           containerBorderColor={'#fff'}
         />
       </View>
       {/* Stop and Resume buttons */}
-      <View
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'row',
-          marginTop: 40,
-        }}>
+      <View style={styles.buttonsContainer}>
         <Avatar
           size={100}
           rounded
           icon={{name: 'stop'}}
           activeOpacity={0.7}
-          containerStyle={{backgroundColor: '#000'}}
+          containerStyle={styles.stopButton}
+          onLongPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'HomeTabs'}],
+            })
+          }
+          onPress={() =>
+            ToastAndroid.show(
+              'Press the button for 5 seconds to save and exit your run.',
+              ToastAndroid.LONG,
+            )
+          }
         />
         <Avatar
           size={100}
           rounded
           icon={{name: 'resume'}}
           activeOpacity={0.7}
-          containerStyle={{backgroundColor: '#fe9836', marginLeft: 60}}
+          containerStyle={styles.resumeButton}
+          onPress={() => navigation.goBack()}
         />
       </View>
     </View>
