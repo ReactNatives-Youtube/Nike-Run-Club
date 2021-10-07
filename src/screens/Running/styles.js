@@ -6,6 +6,7 @@ export default styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 24,
     paddingHorizontal: 32,
+    justifyContent: 'space-between',
   },
   paceCalContainer: {
     justifyContent: 'space-between',
@@ -15,7 +16,7 @@ export default styles = StyleSheet.create({
   metricContainer: {justifyContent: 'center', alignItems: 'center'},
   metricValue: {fontSize: 32, fontWeight: 'bold'},
   metric: {fontSize: 20, fontWeight: 'bold', color: '#a96528'},
-  mainMetric: {fontSize: 120, fontStyle: 'italic', fontWeight: 'bold'},
+  mainMetric: {fontSize: 100, fontWeight: 'bold'},
   avatarTitle: {fontSize: 28, fontWeight: 'bold'},
   innerContainers: {
     alignItems: 'center',

@@ -2,16 +2,24 @@ import React, {useState, useRef, useEffect} from 'react';
 import {Platform} from 'react-native';
 import {Image} from 'react-native';
 import {KeyboardAvoidingView} from 'react-native';
-import {View, Text, Pressable, TextInput, Keyboard} from 'react-native';
+import {
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  Keyboard,
+  Dimensions,
+} from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import styles from './styles';
 import {Levels} from '../../../constants/dummyData';
 import ProgressBar from '../../components/ProgressBar';
 import colors from '../../../constants/colors';
-const SummaryScreen = ({route, navigation}) => {
+const SummaryScreen = ({route}) => {
+  // Hook to get the dimensions of the screen
+  const {width, height} = Dimensions.get('window');
   // Props from each run
   const props = route.params;
-  console.log(props);
   const [title, setTitle] = useState('');
   const [imageBackground, setImageBackground] = useState('green');
   const [nextLevelImageBackground, setNextLevelImageBackground] =
@@ -104,6 +112,8 @@ const SummaryScreen = ({route, navigation}) => {
               style={{
                 ...styles.nextLevelImage,
                 backgroundColor: nextLevelImageBackground,
+                top: height * 0.24,
+                left: width * 0.78,
               }}
             />
             <ProgressBar

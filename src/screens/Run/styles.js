@@ -26,6 +26,7 @@ export default styles = StyleSheet.create({
     marginBottom: 4,
     alignSelf: 'center',
     flexShrink: 1,
+    color: '#000',
   },
   metricUnit: {alignSelf: 'center', fontSize: 18, fontWeight: 'bold'},
   bottomContainer: {justifyContent: 'space-between', alignItems: 'center'},

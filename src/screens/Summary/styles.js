@@ -18,7 +18,7 @@ export default styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  textInput: {fontSize: 24, fontWeight: 'bold'},
+  textInput: {fontSize: 24, fontWeight: 'bold', color: '#000'},
   kilometerValue: {fontSize: 80, fontWeight: 'bold'},
   kilometerMetric: {fontSize: 16, color: colors.summarySubheading},
   metricContainer: {
@@ -37,8 +37,6 @@ export default styles = StyleSheet.create({
     right: 0,
     width: 20,
     height: 25,
-    top: 175,
-    left: 300,
   },
   progressBarContainer: {
     borderRadius: 4,
