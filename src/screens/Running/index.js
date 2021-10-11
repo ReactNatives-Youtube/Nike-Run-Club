@@ -26,6 +26,9 @@ const RunningScreen = ({route}) => {
   // Target value set by the user
   const [targetValue, setTargetValue] = useState('0');
 
+  // This state keeps check whether the screen is in focus or not
+  const [inFocus, setInFocus] = useState(true);
+
   // This useeffect only once
   useEffect(() => {
     if (props.metric == 'Time') {
@@ -35,14 +38,12 @@ const RunningScreen = ({route}) => {
     setTargetValue(props.value);
   }, []);
 
-  // Alert when returning to previous page
-  const callbackFunction = useCallback(
+  const backButtonCallback = useCallback(
     event => {
       // prevent default behavior
       event.preventDefault();
 
       // Alert to confirm his action
-
       Alert.alert(
         'Discarding Run',
         'Are you sure you want to discard this run?',
@@ -61,12 +62,26 @@ const RunningScreen = ({route}) => {
 
   // UseEffect runs only when the navigation back button is pressed
   useEffect(() => {
-    navigation.addListener('beforeRemove', callbackFunction);
-    return () => {
-      console.log('asdas');
-      navigation.removeListener('beforeRemove', callbackFunction);
-    };
-  }, [navigation]);
+    if (inFocus) navigation.addListener('beforeRemove', backButtonCallback);
+    return () => navigation.removeListener('beforeRemove', backButtonCallback);
+  }, [navigation, inFocus]);
+
+  // This useEffect add listener to focus event
+  useEffect(
+    () =>
+      navigation.addListener('focus', event => {
+        setInFocus(true);
+      }),
+    [navigation],
+  );
+  // This useEffect add listener to blur event
+  useEffect(
+    () =>
+      navigation.addListener('blur', event => {
+        setInFocus(false);
+      }),
+    [navigation],
+  );
 
   return (
     <View style={styles.mainContainer}>

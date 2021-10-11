@@ -9,6 +9,7 @@ import ProgressBar from '../../components/ProgressBar';
 import {Avatar} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import styles from './styles';
+import {getDayName, getTimeOfDay} from '../../../constants/dateCalculator';
 const PauseScreen = ({route}) => {
   const navigation = useNavigation();
   const {time, kilometers, calories, pace, progressPercentage} = route.params;
@@ -78,8 +79,22 @@ const PauseScreen = ({route}) => {
           containerStyle={styles.stopButton}
           onLongPress={() =>
             navigation.reset({
-              index: 0,
-              routes: [{name: 'HomeTabs'}],
+              index: 1,
+              routes: [
+                {name: 'HomeTabs'},
+                {
+                  name: 'Summary',
+                  params: {
+                    day: getDayName(),
+                    timeOfDay: getTimeOfDay(),
+                    kilometer: kilometers,
+                    avgPace: pace,
+                    time: time,
+                    cal: calories,
+                    totalKm: 220,
+                  },
+                },
+              ],
             })
           }
           onPress={() =>
