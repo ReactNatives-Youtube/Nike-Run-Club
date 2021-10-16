@@ -10,6 +10,8 @@ buildscript {
         supportLibVersion   = '28.0.0'
         playServicesVersion = '17.0.0' // or find latest version
         androidMapsUtilsVersion = '2.2.5'
+        // Manual Addition for geo-location package
+        googlePlayServicesVersion      = '17.0.0'
     }
     repositories {
         google()
