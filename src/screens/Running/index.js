@@ -1,16 +1,27 @@
 /**
  * This screen is shown when you start a run
  *
+ *
+ * 1. Invoke watchposition api to get current location every 30 seconds
+ * 2. When blurred, clear watchposition api
+ * 3. Calculate kilometer traveled, time spent and pace
+ * 4. Calculate calories
+ * 5. Calculate progress
  */
 
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View, Text, Alert} from 'react-native';
-import ProgressBar from '../../components/ProgressBar';
-import {Avatar} from 'react-native-elements';
-import styles from './styles';
+import Geolocation from 'react-native-geolocation-service';
 import {useNavigation} from '@react-navigation/native';
+import {Avatar} from 'react-native-elements';
+
+import ProgressBar from '../../components/ProgressBar';
+import styles from './styles';
+import {hasPermission} from '../../Hooks/LocationPermission';
+import {calDistance} from '../../../constants/CalculationsPage';
 
 const RunningScreen = ({route}) => {
+  const watchId = useRef(null);
   const navigation = useNavigation();
   const props = route.params;
 
@@ -25,11 +36,65 @@ const RunningScreen = ({route}) => {
   const [calories, setCalories] = useState('--');
   // Target value set by the user
   const [targetValue, setTargetValue] = useState('0');
-
   // This state keeps check whether the screen is in focus or not
   const [inFocus, setInFocus] = useState(true);
 
-  // This useeffect only once
+  // Function to get latest location updates every 30 seconds
+  const getLocationUpdates = async () => {
+    const LocationPermission = await hasPermission();
+    console.log(LocationPermission);
+    if (!LocationPermission) {
+      return;
+    }
+    let oldLocation = null;
+    let totalDistance = 0.0;
+    console.log('AUAB');
+    watchId.current = Geolocation.watchPosition(
+      position => {
+        console.log(position);
+        let newDistance;
+        if (oldLocation == null) {
+          newDistance = '0.0';
+        } else {
+          newDistance = calDistance(
+            oldLocation.coords.latitude,
+            oldLocation.coords.longitude,
+            position.coords.latitude,
+            position.coords.longitude,
+          );
+        }
+        console.log(newDistance);
+        totalDistance = totalDistance + parseFloat(newDistance);
+        setMetricValue(totalDistance.toFixed(2));
+        oldLocation = position;
+      },
+      error => {
+        // setLocation(null);
+        console.log(error);
+      },
+      {
+        accuracy: {
+          android: 'high',
+        },
+        enableHighAccuracy: true,
+        distanceFilter: 0,
+        interval: 30000,
+        fastestInterval: 2000,
+        forceRequestLocation: true,
+        forceLocationManager: true,
+      },
+    );
+  };
+
+  // Function to remove location updates api
+  const removeLocationUpdates = () => {
+    if (watchId.current !== null) {
+      Geolocation.clearWatch(watchId.current);
+      watchId.current = null;
+    }
+  };
+
+  // This useeffect runs only once
   useEffect(() => {
     if (props.metric == 'Time') {
       setMetric('Hours:Minutes');
@@ -71,6 +136,7 @@ const RunningScreen = ({route}) => {
     () =>
       navigation.addListener('focus', event => {
         setInFocus(true);
+        getLocationUpdates();
       }),
     [navigation],
   );
@@ -79,6 +145,7 @@ const RunningScreen = ({route}) => {
     () =>
       navigation.addListener('blur', event => {
         setInFocus(false);
+        removeLocationUpdates();
       }),
     [navigation],
   );

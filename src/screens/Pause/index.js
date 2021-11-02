@@ -9,7 +9,7 @@ import ProgressBar from '../../components/ProgressBar';
 import {Avatar} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import styles from './styles';
-import {getDayName, getTimeOfDay} from '../../../constants/dateCalculator';
+import {getDayName, getTimeOfDay} from '../../../constants/CalculationsPage';
 const PauseScreen = ({route}) => {
   const navigation = useNavigation();
   const {time, kilometers, calories, pace, progressPercentage} = route.params;

@@ -1,5 +1,5 @@
 /**
- * The Run Screen component of home screen
+ * The Home Screen
  */
 
 import React, {useEffect, useRef, useState} from 'react';
@@ -17,7 +17,7 @@ import GeoLocation from 'react-native-geolocation-service';
 import {useNavigation} from '@react-navigation/native';
 import {validateInput} from '../../../constants/Validation';
 import styles from './styles';
-import {PermissionsAndroid} from 'react-native';
+import {hasPermission} from '../../Hooks/LocationPermission';
 import {ToastAndroid} from 'react-native';
 const RunScreen = () => {
   // Ref for interval
@@ -36,42 +36,6 @@ const RunScreen = () => {
 
   // 4. Keeping track of position (lat and long)
   const [position, setPosition] = useState(null);
-
-  // Function to ask/confirm location permission
-  const hasPermission = async () => {
-    if (Platform.OS === 'android' && Platform.Version < 23) {
-      return true;
-    }
-
-    const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (hasPermission) {
-      return true;
-    }
-
-    const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
-    }
-
-    if (status === PermissionsAndroid.RESULTS.DENIED) {
-      ToastAndroid.show(
-        'Location permission denied by user.',
-        ToastAndroid.LONG,
-      );
-    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      ToastAndroid.show(
-        'Location permission revoked by user.',
-        ToastAndroid.LONG,
-      );
-    }
-    return false;
-  };
 
   // function to get current location of user
   const getLocation = async () => {
