@@ -18,7 +18,12 @@ import {Avatar} from 'react-native-elements';
 import ProgressBar from '../../components/ProgressBar';
 import styles from './styles';
 import {hasPermission} from '../../Hooks/LocationPermission';
-import {calDistance} from '../../../constants/CalculationsPage';
+import {
+  calDistance,
+  secondsToHm,
+  calculatePace,
+  pacePresentation,
+} from '../../../constants/CalculationsPage';
 
 const RunningScreen = ({route}) => {
   const watchId = useRef(null);
@@ -26,8 +31,9 @@ const RunningScreen = ({route}) => {
   const props = route.params;
 
   // States to maintain dynamic values
-  const [timeValue, setTimeValue] = useState('00:00');
-  const [kilometersValue, setKilometersValue] = useState('0.0');
+  const [TotalTimeValue, setTotalTimeValue] = useState('00:00');
+  const [TotalKilometersValue, setTotalKilometersValue] = useState('0.0');
+
   const [metric, setMetric] = useState('Kilometers');
   const [metricValue, setMetricValue] = useState('0.0');
   // Progress %
@@ -47,14 +53,18 @@ const RunningScreen = ({route}) => {
       return;
     }
     let oldLocation = null;
+
+    let totalTime = 0;
     let totalDistance = 0.0;
-    console.log('AUAB');
+    let totalPace = 0;
     watchId.current = Geolocation.watchPosition(
       position => {
         console.log(position);
         let newDistance;
+        let newTime;
         if (oldLocation == null) {
           newDistance = '0.0';
+          newTime = 0;
         } else {
           newDistance = calDistance(
             oldLocation.coords.latitude,
@@ -62,10 +72,22 @@ const RunningScreen = ({route}) => {
             position.coords.latitude,
             position.coords.longitude,
           );
+          newTime = 30;
         }
         console.log(newDistance);
         totalDistance = totalDistance + parseFloat(newDistance);
-        setMetricValue(totalDistance.toFixed(2));
+        totalTime = totalTime + newTime;
+        totalPace = totalPace + calculatePace(totalDistance, totalTime);
+        console.log(totalPace);
+        setTotalTimeValue(secondsToHm(totalTime).substring(0, 5));
+        setTotalKilometersValue(totalDistance.toFixed(1));
+        setPace(pacePresentation(totalPace));
+        if (props.metric == 'Time') {
+          setMetricValue(secondsToHm(totalTime).substring(0, 5));
+        } else {
+          setMetricValue(totalDistance.toFixed(1));
+        }
+
         oldLocation = position;
       },
       error => {
@@ -182,8 +204,8 @@ const RunningScreen = ({route}) => {
           icon={{name: 'pause'}}
           onPress={() =>
             navigation.navigate('Pause', {
-              time: timeValue,
-              kilometers: kilometersValue,
+              time: TotalTimeValue,
+              kilometers: TotalKilometersValue,
               calories: calories,
               pace: pace,
               progressPercentage: progress,

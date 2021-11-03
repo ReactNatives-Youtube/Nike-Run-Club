@@ -26,7 +26,6 @@ export const getTimeOfDay = () => {
 };
 
 // Function to calculate Distance
-
 export const calDistance = (lat1, lon1, lat2, lon2) => {
   const toRadian = angle => (Math.PI / 180) * angle;
   const distance = (a, b) => (Math.PI / 180) * (a - b);
@@ -47,4 +46,53 @@ export const calDistance = (lat1, lon1, lat2, lon2) => {
   let finalDistance = RADIUS_OF_EARTH_IN_KM * c;
 
   return finalDistance.toFixed(2);
+};
+
+// Convert seconds to hours and minutes and seconds
+export const secondsToHm = seconds => {
+  seconds = Number(seconds);
+
+  var hours = Math.floor(seconds / 3600);
+  var minutes = Math.floor((seconds % 3600) / 60);
+  var second = Math.floor((seconds % 3600) % 60);
+
+  return (
+    ('0' + hours).slice(-2) +
+    ':' +
+    ('0' + minutes).slice(-2) +
+    ':' +
+    ('0' + second).slice(-2)
+  );
+};
+
+// function to calculate pace
+export const calculatePace = (dist, time_seconds) => {
+  console.log(dist);
+  if (dist <= 0) {
+    return 0;
+  }
+  dist = parseFloat(dist);
+  time = secondsToHm(time_seconds); //00:30:30
+  const hrs = time.substring(0, 2);
+  const mins = time.substring(3, 5);
+  const secs = time.substring(6, 8);
+
+  var timeElapsed = 0;
+  timeElapsed += hrs * 60;
+  timeElapsed += mins;
+  timeElapsed += secs / 60;
+  var calculatedPace = Math.floor(timeElapsed / dist);
+
+  return calculatedPace;
+};
+
+// Function to show pace value to user
+export const pacePresentation = pace => {
+  if (pace == 0) {
+    return '0\'0" ';
+  }
+  var paceMins = Math.floor(pace);
+  var paceSecs = (paceMins * 60) / 1000;
+  pace = paceMins + "'" + paceSecs.toFixed(0) + '"';
+  return pace;
 };
