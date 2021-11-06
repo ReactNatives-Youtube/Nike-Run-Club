@@ -2,11 +2,11 @@
  * This screen is shown when you start a run
  *
  *
- * 1. Invoke watchposition api to get current location every 30 seconds
- * 2. When blurred, clear watchposition api
- * 3. Calculate kilometer traveled, time spent and pace
- * 4. Calculate calories
- * 5. Calculate progress
+ * [x] Invoke watchposition api to get current location every 30 seconds
+ * [x] When blurred, clear watchposition api
+ * [x] Calculate kilometer traveled, time spent and pace
+ * [] Calculate calories
+ * [x] Calculate progress
  */
 
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -41,14 +41,14 @@ const RunningScreen = ({route}) => {
   const [pace, setPace] = useState('-\'--"');
   const [calories, setCalories] = useState('--');
   // Target value set by the user
-  const [targetValue, setTargetValue] = useState('0');
+  const [targetValue, setTargetValue] = useState('0.0');
+
   // This state keeps check whether the screen is in focus or not
   const [inFocus, setInFocus] = useState(true);
 
   // Function to get latest location updates every 30 seconds
   const getLocationUpdates = async () => {
     const LocationPermission = await hasPermission();
-    console.log(LocationPermission);
     if (!LocationPermission) {
       return;
     }
@@ -59,7 +59,6 @@ const RunningScreen = ({route}) => {
     let totalPace = 0;
     watchId.current = Geolocation.watchPosition(
       position => {
-        console.log(position);
         let newDistance;
         let newTime;
         if (oldLocation == null) {
@@ -74,11 +73,9 @@ const RunningScreen = ({route}) => {
           );
           newTime = 30;
         }
-        console.log(newDistance);
         totalDistance = totalDistance + parseFloat(newDistance);
         totalTime = totalTime + newTime;
-        totalPace = totalPace + calculatePace(totalDistance, totalTime);
-        console.log(totalPace);
+        totalPace = calculatePace(totalDistance, totalTime);
         setTotalTimeValue(secondsToHm(totalTime).substring(0, 5));
         setTotalKilometersValue(totalDistance.toFixed(1));
         setPace(pacePresentation(totalPace));
@@ -108,6 +105,37 @@ const RunningScreen = ({route}) => {
     );
   };
 
+  // Function to update the progress
+  const updateProgress = () => {
+    let target, current;
+    if (props.metric == 'Time') {
+      //convert HH:MM to minutes
+
+      // 01:01
+      current = parseInt(metricValue.substring(0, 2)) * 60; //60
+      current = current + parseInt(metricValue.substring(3, 5)); //61
+
+      // 02:00
+      target = parseInt(targetValue.substring(0, 2)) * 60; //120
+      target = target + parseInt(targetValue.substring(3, 5));
+    } else {
+      current = parseFloat(metricValue);
+      target = parseFloat(targetValue);
+    }
+    // Edge case
+    if (target == 0) {
+      return;
+    }
+
+    let percentageCompleted = current / target;
+    setProgress(percentageCompleted * 100 + '%');
+  };
+
+  // This useffect is triggered only when the metricValue changes
+  useEffect(() => {
+    updateProgress();
+  }, [metricValue]);
+
   // Function to remove location updates api
   const removeLocationUpdates = () => {
     if (watchId.current !== null) {
@@ -122,7 +150,7 @@ const RunningScreen = ({route}) => {
       setMetric('Hours:Minutes');
       setMetricValue('00:00');
     }
-    setTargetValue(props.value);
+    setTargetValue(props.targetValue);
   }, []);
 
   const backButtonCallback = useCallback(

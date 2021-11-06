@@ -72,7 +72,7 @@ export const calculatePace = (dist, time_seconds) => {
     return 0;
   }
   dist = parseFloat(dist);
-  time = secondsToHm(time_seconds); //00:30:30
+  time = secondsToHm(time_seconds);
   const hrs = time.substring(0, 2);
   const mins = time.substring(3, 5);
   const secs = time.substring(6, 8);
