@@ -67,23 +67,24 @@ export const secondsToHm = seconds => {
 
 // function to calculate pace
 export const calculatePace = (dist, time_seconds) => {
-  console.log(dist);
+  console.log('distance' + dist);
   if (dist <= 0) {
     return 0;
   }
   dist = parseFloat(dist);
   time = secondsToHm(time_seconds);
-  const hrs = time.substring(0, 2);
-  const mins = time.substring(3, 5);
-  const secs = time.substring(6, 8);
+  const hrs = parseInt(time.substring(0, 2));
+  const mins = parseInt(time.substring(3, 5));
+  const secs = parseInt(time.substring(6, 8));
 
   var timeElapsed = 0;
   timeElapsed += hrs * 60;
   timeElapsed += mins;
   timeElapsed += secs / 60;
-  var calculatedPace = Math.floor(timeElapsed / dist);
-
-  return calculatedPace;
+  console.log('timeelaped ' + timeElapsed);
+  const pace = timeElapsed / dist;
+  console.log(pace);
+  return pace;
 };
 
 // Function to show pace value to user
@@ -91,8 +92,10 @@ export const pacePresentation = pace => {
   if (pace == 0) {
     return '0\'0" ';
   }
-  var paceMins = Math.floor(pace);
-  var paceSecs = (paceMins * 60) / 1000;
-  pace = paceMins + "'" + paceSecs.toFixed(0) + '"';
+  const paceMins = Math.floor(pace);
+  console.log('Minutes' + paceMins);
+  const paceSecs = (pace % 1).toFixed(1) * 60;
+  console.log('Seconds' + paceSecs);
+  pace = paceMins + "'" + paceSecs + '"';
   return pace;
 };

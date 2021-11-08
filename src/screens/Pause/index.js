@@ -1,5 +1,7 @@
 /**
  * Moving to summary page
+ * 1. Show latest position on google maps
+ * 2. When Stopping the run, save the run in db.
  */
 
 import React from 'react';

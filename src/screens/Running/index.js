@@ -1,12 +1,8 @@
 /**
  * This screen is shown when you start a run
  *
- *
- * [x] Invoke watchposition api to get current location every 30 seconds
- * [x] When blurred, clear watchposition api
- * [x] Calculate kilometer traveled, time spent and pace
- * [] Calculate calories
- * [x] Calculate progress
+ * 1. Recalculating pace.
+ * 2. How to persists state when coming back from pause screen
  */
 
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -33,12 +29,13 @@ const RunningScreen = ({route}) => {
   // States to maintain dynamic values
   const [TotalTimeValue, setTotalTimeValue] = useState('00:00');
   const [TotalKilometersValue, setTotalKilometersValue] = useState('0.0');
+  const [avgPace, setAvgPace] = useState(0);
 
   const [metric, setMetric] = useState('Kilometers');
   const [metricValue, setMetricValue] = useState('0.0');
   // Progress %
   const [progress, setProgress] = useState('0%');
-  const [pace, setPace] = useState('-\'--"');
+  const [currentPace, setCurrentPace] = useState('-\'--"');
   const [calories, setCalories] = useState('--');
   // Target value set by the user
   const [targetValue, setTargetValue] = useState('0.0');
@@ -56,7 +53,6 @@ const RunningScreen = ({route}) => {
 
     let totalTime = 0;
     let totalDistance = 0.0;
-    let totalPace = 0;
     watchId.current = Geolocation.watchPosition(
       position => {
         let newDistance;
@@ -75,10 +71,10 @@ const RunningScreen = ({route}) => {
         }
         totalDistance = totalDistance + parseFloat(newDistance);
         totalTime = totalTime + newTime;
-        totalPace = calculatePace(totalDistance, totalTime);
         setTotalTimeValue(secondsToHm(totalTime).substring(0, 5));
         setTotalKilometersValue(totalDistance.toFixed(1));
-        setPace(pacePresentation(totalPace));
+        setCurrentPace(pacePresentation(calculatePace(newDistance, newTime)));
+        setAvgPace(pacePresentation(calculatePace(totalDistance, totalTime)));
         if (props.metric == 'Time') {
           setMetricValue(secondsToHm(totalTime).substring(0, 5));
         } else {
@@ -205,7 +201,7 @@ const RunningScreen = ({route}) => {
       <View style={styles.paceCalContainer}>
         {/* Pace */}
         <View style={styles.metricContainer}>
-          <Text style={styles.metricValue}>{pace}</Text>
+          <Text style={styles.metricValue}>{currentPace}</Text>
           <Text style={styles.metric}>Pace</Text>
         </View>
         {/* Calories */}
@@ -235,7 +231,7 @@ const RunningScreen = ({route}) => {
               time: TotalTimeValue,
               kilometers: TotalKilometersValue,
               calories: calories,
-              pace: pace,
+              pace: avgPace,
               progressPercentage: progress,
             })
           }
