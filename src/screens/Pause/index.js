@@ -1,36 +1,127 @@
 /**
  * Moving to summary page
- * 1. Show latest position on google maps
- * 2. When Stopping the run, save the run in db.
+ * 3. Send index of the run to pause screen
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, ToastAndroid} from 'react-native';
 import MapView, {Circle} from 'react-native-maps';
-import ProgressBar from '../../components/ProgressBar';
 import {Avatar} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector, useDispatch} from 'react-redux';
+import GeoLocation from 'react-native-geolocation-service';
+import {hasPermission} from '../../Hooks/LocationPermission';
 import styles from './styles';
-import {getDayName, getTimeOfDay} from '../../../constants/CalculationsPage';
+import ProgressBar from '../../components/ProgressBar';
+import {
+  calculatePace,
+  getDayName,
+  getTimeOfDay,
+  pacePresentation,
+  secondsToHm,
+} from '../../../constants/CalculationsPage';
+import * as Actions from '../../store/actions/index';
 const PauseScreen = ({route}) => {
   const navigation = useNavigation();
-  const {time, kilometers, calories, pace, progressPercentage} = route.params;
+  const dispatch = useDispatch();
+  const currentRun = useSelector(state => state.currentRun);
+  const runs = useSelector(state => state.previousRuns);
+  console.log(runs);
+  const [position, setPosition] = useState(null);
+  const {calories, progressPercentage} = route.params;
+
+  // function to get current location of user
+  const getCurrentLocation = async () => {
+    const locationPermission = await hasPermission();
+    if (!locationPermission) return;
+
+    GeoLocation.getCurrentPosition(
+      position => {
+        setPosition(position);
+      },
+      error => {
+        setPosition(null);
+        ToastAndroid.show(
+          "We couldn't fetch your location. Please check your device location service!",
+          ToastAndroid.LONG,
+        );
+        console.log(error);
+      },
+      {
+        accuracy: {
+          android: 'high',
+        },
+        enableHighAccuracy: true,
+        timeout: 30000,
+        maximumAge: 10000,
+        distanceFilter: 0,
+        forceRequestLocation: true,
+        forceLocationManager: false,
+        showLocationDialog: true,
+      },
+    );
+  };
+
+  // Functions to save run to redux store and db, also moving to summary screen
+  const saveRun = () => {
+    dispatch(
+      Actions.save_run_to_db({
+        day: getDayName(),
+        timeOfDay: getTimeOfDay(),
+        kilometer: currentRun.distance,
+        time: currentRun.time,
+        cal: calories,
+        totalKm: 220,
+      }),
+    );
+    navigation.reset({
+      index: 1,
+      routes: [
+        {name: 'HomeTabs'},
+        {
+          name: 'Summary',
+          params: {
+            day: getDayName(),
+            timeOfDay: getTimeOfDay(),
+            kilometer: '0',
+            avgPace: '0',
+            time: '0',
+            cal: calories,
+            totalKm: 220,
+          },
+        },
+      ],
+    });
+  };
+
+  // This useEffect add listener to focus event
+  useEffect(
+    () =>
+      navigation.addListener('focus', event => {
+        getCurrentLocation();
+      }),
+    [navigation],
+  );
+
   return (
     <View style={styles.mainContainer}>
       {/* Map View */}
       {/* Google Maps API/Image */}
       <View style={styles.mapContainer} pointerEvents="none">
         <MapView
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
+          region={{
+            latitude: position?.coords.latitude || 37.78825,
+            longitude: position?.coords.longitude || -122.4324,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
           minZoomLevel={18}
           style={{flex: 1, opacity: 0.6}}>
           <Circle
-            center={{latitude: 37.78825, longitude: -122.4324}}
+            center={{
+              latitude: position?.coords.latitude || 37.78825,
+              longitude: position?.coords.longitude || -122.4324,
+            }}
             radius={4}
             fillColor="red"
           />
@@ -42,7 +133,9 @@ const PauseScreen = ({route}) => {
         {/* Kilometer and time */}
         <View style={styles.metricInnerContainer}>
           <View style={styles.metricContainer}>
-            <Text style={styles.metricValue}>{kilometers}</Text>
+            <Text style={styles.metricValue}>
+              {currentRun.distance.toFixed(1)}
+            </Text>
             <Text style={styles.metric}>Kilometers</Text>
           </View>
           <View style={styles.secondMetricContainer}>
@@ -53,11 +146,17 @@ const PauseScreen = ({route}) => {
         {/* Calories and pace */}
         <View style={styles.metricInnerContainer}>
           <View style={styles.metricContainer}>
-            <Text style={styles.metricValue}>{time}</Text>
+            <Text style={styles.metricValue}>
+              {secondsToHm(currentRun.time).substring(0, 5)}
+            </Text>
             <Text style={styles.metric}>Time</Text>
           </View>
           <View style={styles.secondMetricContainer}>
-            <Text style={styles.metricValue}>{pace}</Text>
+            <Text style={styles.metricValue}>
+              {pacePresentation(
+                calculatePace(currentRun.distance, currentRun.time),
+              )}
+            </Text>
             <Text style={styles.metric}>Pace</Text>
           </View>
         </View>
@@ -79,26 +178,7 @@ const PauseScreen = ({route}) => {
           icon={{name: 'stop'}}
           activeOpacity={0.7}
           containerStyle={styles.stopButton}
-          onLongPress={() =>
-            navigation.reset({
-              index: 1,
-              routes: [
-                {name: 'HomeTabs'},
-                {
-                  name: 'Summary',
-                  params: {
-                    day: getDayName(),
-                    timeOfDay: getTimeOfDay(),
-                    kilometer: kilometers,
-                    avgPace: pace,
-                    time: time,
-                    cal: calories,
-                    totalKm: 220,
-                  },
-                },
-              ],
-            })
-          }
+          onLongPress={saveRun}
           onPress={() =>
             ToastAndroid.show(
               'Press the button for 5 seconds to save and exit your run.',
@@ -109,7 +189,7 @@ const PauseScreen = ({route}) => {
         <Avatar
           size={100}
           rounded
-          icon={{name: 'resume'}}
+          // icon={{name: 'resume'}}
           activeOpacity={0.7}
           containerStyle={styles.resumeButton}
           onPress={() => navigation.goBack()}

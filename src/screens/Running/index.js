@@ -1,14 +1,13 @@
 /**
  * This screen is shown when you start a run
  *
- * 1. Recalculating pace.
- * 2. How to persists state when coming back from pause screen
  */
 
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View, Text, Alert} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 import {Avatar} from 'react-native-elements';
 
 import ProgressBar from '../../components/ProgressBar';
@@ -21,15 +20,17 @@ import {
   pacePresentation,
 } from '../../../constants/CalculationsPage';
 
+import * as Actions from '../../store/actions/index';
+
 const RunningScreen = ({route}) => {
   const watchId = useRef(null);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const props = route.params;
 
-  // States to maintain dynamic values
-  const [TotalTimeValue, setTotalTimeValue] = useState('00:00');
-  const [TotalKilometersValue, setTotalKilometersValue] = useState('0.0');
-  const [avgPace, setAvgPace] = useState(0);
+  // Getting total time and distance covered in previous run from redux store
+  let totalTime = useSelector(state => state.currentRun.time);
+  let totalDistance = useSelector(state => state.currentRun.distance);
 
   const [metric, setMetric] = useState('Kilometers');
   const [metricValue, setMetricValue] = useState('0.0');
@@ -50,9 +51,6 @@ const RunningScreen = ({route}) => {
       return;
     }
     let oldLocation = null;
-
-    let totalTime = 0;
-    let totalDistance = 0.0;
     watchId.current = Geolocation.watchPosition(
       position => {
         let newDistance;
@@ -71,16 +69,20 @@ const RunningScreen = ({route}) => {
         }
         totalDistance = totalDistance + parseFloat(newDistance);
         totalTime = totalTime + newTime;
-        setTotalTimeValue(secondsToHm(totalTime).substring(0, 5));
-        setTotalKilometersValue(totalDistance.toFixed(1));
         setCurrentPace(pacePresentation(calculatePace(newDistance, newTime)));
-        setAvgPace(pacePresentation(calculatePace(totalDistance, totalTime)));
+        // Dispatching save current run action every 30 seconds
+        dispatch(
+          Actions.save_current_run({
+            distance: totalDistance,
+            time: totalTime,
+          }),
+        );
+
         if (props.metric == 'Time') {
           setMetricValue(secondsToHm(totalTime).substring(0, 5));
         } else {
           setMetricValue(totalDistance.toFixed(1));
         }
-
         oldLocation = position;
       },
       error => {
@@ -228,10 +230,7 @@ const RunningScreen = ({route}) => {
           icon={{name: 'pause'}}
           onPress={() =>
             navigation.navigate('Pause', {
-              time: TotalTimeValue,
-              kilometers: TotalKilometersValue,
               calories: calories,
-              pace: avgPace,
               progressPercentage: progress,
             })
           }
