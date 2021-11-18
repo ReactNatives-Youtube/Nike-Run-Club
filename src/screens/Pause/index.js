@@ -1,6 +1,5 @@
 /**
- * Moving to summary page
- * 3. Send index of the run to pause screen
+ * This screen shown when you pause a run
  */
 
 import React, {useEffect, useState} from 'react';
@@ -64,14 +63,17 @@ const PauseScreen = ({route}) => {
 
   // Functions to save run to redux store and db, also moving to summary screen
   const saveRun = () => {
+    //Unique Id for each run
+    const id = new Date().toISOString() + 'Nakul';
     dispatch(
       Actions.save_run_to_db({
+        id: id,
         day: getDayName(),
         timeOfDay: getTimeOfDay(),
-        kilometer: currentRun.distance,
+        distance: currentRun.distance,
         time: currentRun.time,
         cal: calories,
-        totalKm: 220,
+        totalKmRan: 220,
       }),
     );
     navigation.reset({
@@ -83,11 +85,10 @@ const PauseScreen = ({route}) => {
           params: {
             day: getDayName(),
             timeOfDay: getTimeOfDay(),
-            kilometer: '0',
-            avgPace: '0',
-            time: '0',
+            distance: currentRun.distance,
+            time: currentRun.time,
             cal: calories,
-            totalKm: 220,
+            totalKmRan: 220,
           },
         },
       ],

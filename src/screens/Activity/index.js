@@ -1,17 +1,23 @@
+// Activity screen shown in our tabs screen
+/**
+ * 1. Getting data from redux
+ * 2. Add presentation functions to values in Activity card
+ */
+
 import React from 'react';
-import {Text, View, FlatList} from 'react-native';
+import {View, FlatList} from 'react-native';
 import ActivityCard from '../../components/ActivityCard';
-import {DATA} from '../../../constants/dummyData';
+import {useSelector} from 'react-redux';
 const ActivityScreen = () => {
+  const DATA = useSelector(state => state.previousRuns);
   const renderItem = ({item}) => (
     <ActivityCard
       day={item.day}
       timeOfDay={item.timeOfDay}
-      kilometer={item.kilometer}
-      avgPace={item.avgPace}
+      distance={item.distance}
       time={item.time}
       cal={item.calories}
-      totalKm={item.totalKmRan}
+      totalKmRan={item.totalKmRan}
     />
   );
 

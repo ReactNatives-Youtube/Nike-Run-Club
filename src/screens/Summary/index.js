@@ -1,3 +1,8 @@
+/**
+ * 1. Adding presentation functions
+ * 2. When editing the title of the run it should be saved in redux and db
+ */
+
 import React, {useState, useRef, useEffect} from 'react';
 import {Platform} from 'react-native';
 import {Image} from 'react-native';
@@ -15,6 +20,11 @@ import styles from './styles';
 import {Levels} from '../../../constants/dummyData';
 import ProgressBar from '../../components/ProgressBar';
 import colors from '../../../constants/colors';
+import {
+  calculatePace,
+  pacePresentation,
+  secondsToHm,
+} from '../../../constants/CalculationsPage';
 const SummaryScreen = ({route}) => {
   // Hook to get the dimensions of the screen
   const {width, height} = Dimensions.get('window');
@@ -32,21 +42,21 @@ const SummaryScreen = ({route}) => {
   };
 
   // Function to calculate the Level of that user
-  const calculateLevelHandler = totalKm => {
+  const calculateLevelHandler = totalKmRan => {
     for (let i = 0; i < Levels.length; i++) {
-      if (Levels[i].kilometerRequired > totalKm) {
+      if (Levels[i].kilometerRequired > totalKmRan) {
         setImageBackground(Levels[i - 1].level);
         setNextLevelImageBackground(Levels[i].level);
-        let percentageDone = totalKm / Levels[i].kilometerRequired;
+        let percentageDone = totalKmRan / Levels[i].kilometerRequired;
         setProgress(percentageDone * 100 + '%');
-        setKilometerLeft(Levels[i].kilometerRequired - totalKm);
+        setKilometerLeft(Levels[i].kilometerRequired - totalKmRan);
         return;
       }
       setImageBackground(Levels[i].level);
       setNextLevelImageBackground(Levels[i].level);
-      let percentageDone = totalKm / Levels[i].kilometerRequired;
+      let percentageDone = totalKmRan / Levels[i].kilometerRequired;
       setProgress(percentageDone * 100 + '%');
-      setKilometerLeft(Levels[i].kilometerRequired - totalKm);
+      setKilometerLeft(Levels[i].kilometerRequired - totalKmRan);
     }
   };
   // Reference to TextInput component
@@ -56,7 +66,7 @@ const SummaryScreen = ({route}) => {
   useEffect(() => {
     const startTite = props.day + ' ' + props.timeOfDay + ' Run';
     setTitle(startTite);
-    calculateLevelHandler(props.totalKm);
+    calculateLevelHandler(props.totalKmRan);
   }, []);
 
   return (
@@ -83,17 +93,23 @@ const SummaryScreen = ({route}) => {
         <View style={{flex: 1}}>
           {/* Kilometers */}
           <View style={{marginTop: 12}}>
-            <Text style={styles.kilometerValue}>{props.kilometer}</Text>
+            <Text style={styles.kilometerValue}>
+              {props.distance.toFixed(1)}
+            </Text>
             <Text style={styles.kilometerMetric}>Kilometers</Text>
           </View>
           {/* Metric pace, time and calories */}
           <View style={styles.metricContainer}>
             <View>
-              <Text style={styles.metricValue}>{props.avgPace}</Text>
+              <Text style={styles.metricValue}>
+                {pacePresentation(calculatePace(props.distance, props.time))}
+              </Text>
               <Text style={styles.metric}>Pace</Text>
             </View>
             <View>
-              <Text style={styles.metricValue}>{props.time}</Text>
+              <Text style={styles.metricValue}>
+                {secondsToHm(props.time).substring(0, 5)}
+              </Text>
               <Text style={styles.metric}>Time</Text>
             </View>
             <View>

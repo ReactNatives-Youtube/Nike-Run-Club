@@ -6,6 +6,11 @@ import React from 'react';
 import {View, Text, Image, Pressable} from 'react-native';
 import styles from './styles';
 import {useNavigation} from '@react-navigation/native';
+import {
+  calculatePace,
+  pacePresentation,
+  secondsToHm,
+} from '../../../constants/CalculationsPage';
 
 const ActivityCard = props => {
   const navigation = useNavigation();
@@ -16,11 +21,10 @@ const ActivityCard = props => {
         navigation.navigate('Summary', {
           day: props.day,
           timeOfDay: props.timeOfDay,
-          kilometer: props.kilometer,
-          avgPace: props.avgPace,
+          distance: props.distance,
           time: props.time,
           cal: props.cal,
-          totalKm: props.totalKm,
+          totalKmRan: props.totalKmRan,
         })
       }>
       {/* Inner Container 1 */}
@@ -43,17 +47,21 @@ const ActivityCard = props => {
       <View style={styles.innerContainer2}>
         {/* Kilometer */}
         <View>
-          <Text style={styles.metricValue}>{props.kilometer}</Text>
+          <Text style={styles.metricValue}>{props.distance.toFixed(1)}</Text>
           <Text style={styles.metric}>Kilometer</Text>
         </View>
         {/* Avg pace */}
         <View>
-          <Text style={styles.metricValue}>{props.avgPace}</Text>
+          <Text style={styles.metricValue}>
+            {pacePresentation(calculatePace(props.distance, props.time))}
+          </Text>
           <Text style={styles.metric}>Avg. Pace</Text>
         </View>
         {/* Time */}
         <View>
-          <Text style={styles.metricValue}>{props.time}</Text>
+          <Text style={styles.metricValue}>
+            {secondsToHm(props.time).substring(0, 5)}
+          </Text>
           <Text style={styles.metric}>Time</Text>
         </View>
       </View>
