@@ -1,12 +1,12 @@
 // Main Reducer for redux
 import {SAVE_CURRENT_RUN, SAVE_RUN_TO_DB} from '../actions/index';
-
 const initialState = {
   currentRun: {
     distance: 0,
     time: 0,
   },
   previousRuns: [],
+  totalKms: 0,
 };
 
 const reducer = (state = initialState, actions) => {

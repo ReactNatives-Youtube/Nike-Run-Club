@@ -1,3 +1,5 @@
+// Add redux thunk
+
 // 1. Save a current run
 // 2. Fetch all previous runs
 // 3. Save a run to DB

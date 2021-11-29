@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "733903267902",
+    "project_id": "nike-run-club-yt",
+    "storage_bucket": "nike-run-club-yt.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733903267902:android:42292fe36d1bfea559096f",
+        "android_client_info": {
+          "package_name": "com.nike"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733903267902-ln30jv87dst9lp4ts6ej241iv51864ne.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBohG3Qtogj56b1MOVl6I49u3vX7PSfNbs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733903267902-ln30jv87dst9lp4ts6ej241iv51864ne.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
