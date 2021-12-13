@@ -1,5 +1,9 @@
 // Main Reducer for redux
-import {SAVE_CURRENT_RUN, SAVE_RUN_TO_DB} from '../actions/index';
+import {
+  SAVE_CURRENT_RUN,
+  SAVE_RUN_TO_DB,
+  GET_USER_DATA,
+} from '../actions/index';
 const initialState = {
   currentRun: {
     distance: 0,
@@ -16,6 +20,8 @@ const reducer = (state = initialState, actions) => {
       break;
     case SAVE_RUN_TO_DB:
       state.previousRuns.unshift(actions.data);
+      break;
+    case GET_USER_DATA:
       break;
   }
   return state;

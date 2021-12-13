@@ -1,8 +1,4 @@
 // Activity screen shown in our tabs screen
-/**
- * 1. Getting data from redux
- * 2. Add presentation functions to values in Activity card
- */
 
 import React from 'react';
 import {View, FlatList} from 'react-native';

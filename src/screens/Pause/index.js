@@ -72,7 +72,7 @@ const PauseScreen = ({route}) => {
         timeOfDay: getTimeOfDay(),
         distance: currentRun.distance,
         time: currentRun.time,
-        cal: calories,
+        cal: '0',
         totalKmRan: 220,
       }),
     );
