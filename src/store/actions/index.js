@@ -14,6 +14,7 @@ export const save_current_run = data => {
 // Saving the current to db and updating previousRun array in redux store
 export const save_run_to_db = data => {
   // Code coming for saving runs to db(Firebase or mongodb)
-
-  return {type: SAVE_RUN_TO_DB, data};
+  return dispatch => {
+    dispatch({type: SAVE_RUN_TO_DB, data});
+  };
 };
