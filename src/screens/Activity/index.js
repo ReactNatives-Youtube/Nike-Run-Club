@@ -4,6 +4,7 @@ import React from 'react';
 import {View, FlatList} from 'react-native';
 import ActivityCard from '../../components/ActivityCard';
 import {useSelector} from 'react-redux';
+import {Text} from 'react-native';
 const ActivityScreen = () => {
   const DATA = useSelector(state => state.previousRuns);
   const renderItem = ({item}) => (
@@ -18,12 +19,20 @@ const ActivityScreen = () => {
 
   return (
     <View style={{paddingHorizontal: 12}}>
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        showsVerticalScrollIndicator={false}
-      />
+      {DATA.length == 0 ? (
+        <View style={{alignItems: 'center', justifyContent: 'center', height:"100%"}}>
+          <Text style={{fontSize: 24, fontWeight: 'bold'}}>
+            No Activity Found! Let's Start Running!!
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={DATA}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 };

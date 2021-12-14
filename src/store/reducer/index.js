@@ -11,6 +11,7 @@ const initialState = {
   },
   previousRuns: [],
   totalKms: 0,
+  userName: '',
 };
 
 const reducer = (state = initialState, actions) => {
@@ -40,6 +41,7 @@ const reducer = (state = initialState, actions) => {
       }
       state.previousRuns = runs;
       state.totalKms = totalKm;
+      state.userName = actions.userName;
       break;
   }
   return state;
