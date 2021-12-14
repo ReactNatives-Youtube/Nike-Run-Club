@@ -1,6 +1,6 @@
 import React from 'react';
 import type {Node} from 'react';
-import {Provider} from 'react-redux';
+import {Provider, useDispatch} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import ReduxThunk from 'redux-thunk';
 

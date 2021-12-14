@@ -9,11 +9,17 @@ import SummaryScreen from '../screens/Summary';
 import HomeTabs from './HomeTabs';
 import RunStack from './RunStack';
 import colors from '../../constants/colors';
+import StartUpScreen from '../screens/StartUp';
 const MainNavigation = () => {
   const Stack = createStackNavigator();
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeTabs">
+      <Stack.Navigator initialRouteName="StartUp">
+        <Stack.Screen
+          name="StartUp"
+          component={StartUpScreen}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="HomeTabs"
           component={HomeTabs}

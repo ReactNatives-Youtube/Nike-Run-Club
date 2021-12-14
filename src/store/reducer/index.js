@@ -20,8 +20,26 @@ const reducer = (state = initialState, actions) => {
       break;
     case SAVE_RUN_TO_DB:
       state.previousRuns.unshift(actions.data);
+      state.totalKms = state.totalKms + parseInt(actions.data.distance);
       break;
     case GET_USER_DATA:
+      // Data manipulations
+      const data = actions.data;
+      let runs = [];
+      let totalKm = 0;
+      for (const item in data) {
+        runs.unshift({
+          id: item,
+          cal: data[item].cal,
+          day: data[item].day,
+          distance: data[item].distance,
+          time: data[item].time,
+          timeOfDay: data[item].timeOfDay,
+        });
+        totalKm = totalKm + parseInt(data[item].distance);
+      }
+      state.previousRuns = runs;
+      state.totalKms = totalKm;
       break;
   }
   return state;

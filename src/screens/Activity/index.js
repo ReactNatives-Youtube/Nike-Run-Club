@@ -12,8 +12,7 @@ const ActivityScreen = () => {
       timeOfDay={item.timeOfDay}
       distance={item.distance}
       time={item.time}
-      cal={item.calories}
-      totalKmRan={item.totalKmRan}
+      cal={item.cal}
     />
   );
 

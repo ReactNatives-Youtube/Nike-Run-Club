@@ -19,6 +19,7 @@ import {validateInput} from '../../../constants/Validation';
 import styles from './styles';
 import {hasPermission} from '../../Hooks/LocationPermission';
 import {ToastAndroid} from 'react-native';
+
 const RunScreen = () => {
   // Ref for interval
   const interval = useRef(null);

@@ -63,17 +63,13 @@ const PauseScreen = ({route}) => {
 
   // Functions to save run to redux store and db, also moving to summary screen
   const saveRun = () => {
-    //Unique Id for each run
-    const id = new Date().toISOString() + 'Nakul';
     dispatch(
       Actions.save_run_to_db({
-        id: id,
         day: getDayName(),
         timeOfDay: getTimeOfDay(),
         distance: currentRun.distance,
         time: currentRun.time,
-        cal: '0',
-        totalKmRan: 220,
+        cal: 0,
       }),
     );
     navigation.reset({
@@ -87,8 +83,7 @@ const PauseScreen = ({route}) => {
             timeOfDay: getTimeOfDay(),
             distance: currentRun.distance,
             time: currentRun.time,
-            cal: calories,
-            totalKmRan: 220,
+            cal: 0,
           },
         },
       ],

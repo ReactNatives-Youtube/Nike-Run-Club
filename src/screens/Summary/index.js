@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import styles from './styles';
-import {Levels} from '../../../constants/dummyData';
+import {Levels} from '../../../constants/Levels';
 import ProgressBar from '../../components/ProgressBar';
 import colors from '../../../constants/colors';
 import {
@@ -25,11 +25,15 @@ import {
   pacePresentation,
   secondsToHm,
 } from '../../../constants/CalculationsPage';
+import {useSelector} from 'react-redux';
 const SummaryScreen = ({route}) => {
+  // Getting total Kms ran from redux
+  const totalKmRan = useSelector(state => state.totalKms);
   // Hook to get the dimensions of the screen
   const {width, height} = Dimensions.get('window');
   // Props from each run
   const props = route.params;
+  console.log(props);
   const [title, setTitle] = useState('');
   const [imageBackground, setImageBackground] = useState('green');
   const [nextLevelImageBackground, setNextLevelImageBackground] =
@@ -66,7 +70,7 @@ const SummaryScreen = ({route}) => {
   useEffect(() => {
     const startTite = props.day + ' ' + props.timeOfDay + ' Run';
     setTitle(startTite);
-    calculateLevelHandler(props.totalKmRan);
+    calculateLevelHandler(totalKmRan);
   }, []);
 
   return (

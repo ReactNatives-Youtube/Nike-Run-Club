@@ -24,7 +24,6 @@ const ActivityCard = props => {
           distance: props.distance,
           time: props.time,
           cal: props.cal,
-          totalKmRan: props.totalKmRan,
         })
       }>
       {/* Inner Container 1 */}
