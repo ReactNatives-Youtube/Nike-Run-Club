@@ -2,7 +2,7 @@
 <img
 		width="250"
 		alt="Nike Run Club Clone Clone - React Native"
-		src="https://tenor.com/bAILe.gif">
+		src="https://github.com/ReactNatives-Youtube/Nike-Run-Club/blob/master/preview/NRC-Logo.gif">
 </h1>
 <h3 align="center">
 	Nike Run Club Clone - React Native
