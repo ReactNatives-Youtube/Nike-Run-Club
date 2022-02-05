@@ -17,7 +17,7 @@
 ## Overview
 
 This project was created to teach people about various functionalities of react native through this project on my youtube channel.
-
+<a href="https://www.youtube.com/watch?v=HB2vziCv7qY&list=PLmGspsLc4d9ksO4SRKW15GAPh9zNYY3F7"/>
 
 ## Screenshots
 
